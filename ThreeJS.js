@@ -33,118 +33,15 @@ var ThreeJS = function(aP5, aDiv) {
     mTrackballControls.staticMoving = true;
     mTrackballControls.dynamicDampingFactor = 0.3;
     mTrackballControls.keys = [65, 83, 68];
-    //mTrackballControls.addEventListener('change', this.mP5.draw)
-    //mTrackballControls.addEventListener( 'change', render );
+
     mTransformControls = new THREE.TransformControls(mCamera, mRenderer.domElement);
-    //mTransformControls.addEventListener('change', this.mP5.draw);
     mTransformControls.enabled = false;
     mScene.add(mTransformControls);
 
-
-
     mTextureMapStatic = THREE.ImageUtils.loadTexture('data/testImage.jpg');
     mTextureMapStatic.minFilter = THREE.NearestFilter;
-    mShaderMaterialFakeTexture = new THREE.ShaderMaterial({
 
-      uniforms: {
-        uTextureMap: {
-          type: "t",
-          value: null
-        },
-        uBBox: {
-          type: "v3v",
-          value: null
-        },
-      },
-      attributes: {},
-      side: THREE.DoubleSide,
-      vertexColors: THREE.VertexColors,
-      vertexShader: document.getElementById('vertexShaderFakeTexture').textContent,
-      fragmentShader: document.getElementById('fragmentShaderFakeTexture').textContent
-    });
-
-    mShaderMaterialTexture = new THREE.ShaderMaterial({
-
-      uniforms: {
-        uTextureMap: {
-          type: "t",
-          value: null
-        },
-      },
-      attributes: {},
-      side: THREE.DoubleSide,
-      vertexColors: THREE.VertexColors,
-      vertexShader: document.getElementById('vertexShaderTexture').textContent,
-      fragmentShader: document.getElementById('fragmentShaderTexture').textContent
-    });
-
-    mShaderMaterialTextureDistort = new THREE.ShaderMaterial({
-
-      uniforms: {
-        uTextureMap: {
-          type: "t",
-          value: null
-        },
-      },
-      attributes: {},
-      side: THREE.DoubleSide,
-      vertexColors: THREE.VertexColors,
-      vertexShader: document.getElementById('vertexShaderTextureDistort').textContent,
-      fragmentShader: document.getElementById('fragmentShaderTextureDistort').textContent
-    });
-    
-    mShaderMaterialFakeTextureDistort = new THREE.ShaderMaterial({
-
-      uniforms: {
-        uTextureMap: {
-          type: "t",
-          value: null
-        },
-        uBBox: {
-          type: "v3v",
-          value: null
-        },
-      },
-      attributes: {},
-      side: THREE.DoubleSide,
-      vertexColors: THREE.VertexColors,
-      vertexShader: document.getElementById('vertexShaderFakeTextureDistort').textContent,
-      fragmentShader: document.getElementById('fragmentShaderFakeTextureDistort').textContent
-    });
-    
-    mShaderMaterialFakeTextureDistortHeight = new THREE.ShaderMaterial({
-
-      uniforms: {
-        uTextureMap: {
-          type: "t",
-          value: null
-        },
-        uBBox: {
-          type: "v3v",
-          value: null
-        },
-      },
-      attributes: {},
-      side: THREE.DoubleSide,
-      vertexColors: THREE.VertexColors,
-      vertexShader: document.getElementById('vertexShaderFakeTextureDistortHeight').textContent,
-      fragmentShader: document.getElementById('fragmentShaderFakeTextureDistortHeight').textContent
-    });
-    
-    mShaderMaterialTextureDistortHeight = new THREE.ShaderMaterial({
-
-      uniforms: {
-        uTextureMap: {
-          type: "t",
-          value: null
-        },
-      },
-      attributes: {},
-      side: THREE.DoubleSide,
-      vertexColors: THREE.VertexColors,
-      vertexShader: document.getElementById('vertexShaderTextureDistortHeight').textContent,
-      fragmentShader: document.getElementById('fragmentShaderTextureDistortHeight').textContent
-    });
+    setupShaders();
 
     mMesh = new THREE.Mesh(new THREE.TorusGeometry(10, 3, 16, 100), mShaderMaterialFakeTexture);
     mMesh.geometry.computeBoundingBox();
@@ -159,27 +56,14 @@ var ThreeJS = function(aP5, aDiv) {
     mBBoxHelper.update();
     mScene.add(mBBoxHelper);
 
-    // var light = new THREE.SpotLight(0xffffff, 2, 0);
-    // light.shadowMapWidth = 1024;
-    // light.shadowMapHeight = 1024;
-    // light.castShadow = true;
-    // light.position.set(0, 0, 66);
-    // this.mScene.add(light);
-
     var geometry = new THREE.PlaneBufferGeometry(5, 20, 600, 1200);
     geometry.computeBoundingBox();
-    var material = new THREE.MeshLambertMaterial({
-      color: 0x00fff0,
-      side: THREE.DoubleSide
-    });
     var plane = new THREE.Mesh(geometry, mShaderMaterialTextureDistortHeight);
-    plane.position.z = -22;
+    plane.position.z = 0;
     plane.scale.x = 20;
     plane.scale.y = 10;
     plane.recieveShadow = true;
     mScene.add(plane);
-
-    mScene.add(new THREE.Mesh(new THREE.SphereGeometry(1, 32, 32), material));
 
     mAxes = buildAxes(1000);
     mAxes.visible = false;
@@ -187,6 +71,8 @@ var ThreeJS = function(aP5, aDiv) {
   };
 
   this.update = function() {
+    mCamera.lookAt(mScene.position);
+
     mTrackballControls.update();
     mTransformControls.update();
     mBBoxHelper.update();
@@ -237,12 +123,6 @@ var ThreeJS = function(aP5, aDiv) {
     loader.load(aName, function(geometry) {
       var oldMesh = mScene.getObjectByName(mMesh.name);
       mScene.remove(oldMesh);
-      // var m = new THREE.Matrix4();
-      // m.makeTranslation(0.0, 0.0, 0.0);
-      // m.makeRotationY(-Math.PI);
-      //m.setPosition(0,3,0)
-      //m.makeRotationZ(Math.PI/2);
-      //geometry.applyMatrix(m);
       geometry.computeFaceNormals();
       geometry.computeVertexNormals();
       geometry.verticesNeedUpdate = true;
@@ -287,15 +167,8 @@ var ThreeJS = function(aP5, aDiv) {
       aName,
       // Function when resource is loaded
       function(geometry) {
-        //parent.mScene.add(new THREE.Mesh(geometry, parent.mShaderMaterial));
         var oldMesh = mScene.getObjectByName(mMesh.name);
         mScene.remove(oldMesh);
-        // var m = new THREE.Matrix4();
-        // m.makeTranslation(0.0, 0.0, 0.0);
-        // m.makeRotationY(-Math.PI);
-        //m.setPosition(0,3,0)
-        //m.makeRotationZ(Math.PI/2);
-        //geometry.applyMatrix(m);
         geometry.computeFaceNormals();
         geometry.computeVertexNormals();
         geometry.verticesNeedUpdate = true;
@@ -314,10 +187,6 @@ var ThreeJS = function(aP5, aDiv) {
         mBBoxHelper.name = "BBox Helper";
         mBBoxHelper.visible = false;
         mScene.add(mBBoxHelper);
-        // var boundingBox = mMesh.geometry.boundingBox.clone();
-        // alert('bounding box coordinates: ' +
-        //   '(' + boundingBox.min.x + ', ' + boundingBox.min.y + ', ' + boundingBox.min.z + '), ' +
-        //   '(' + boundingBox.max.x + ', ' + boundingBox.max.y + ', ' + boundingBox.max.z + ')');
       },
       // Function called when download progresses
       function(xhr) {
@@ -354,11 +223,11 @@ var ThreeJS = function(aP5, aDiv) {
     mRenderer.domElement.style.position = "absolute";
   };
 
-  this.resizeRenderer = function() {
+  this.resizeRenderer = function(aWidth, aHeight) {
     mRenderer.setSize(aWidth, aHeight);
     mCamera.aspect = aWidth / aHeight;
     mCamera.updateProjectionMatrix();
-    mCamera.lookAt(this.mScene.position);
+    mCamera.lookAt(mScene.position);
     mTrackballControls.handleResize();
   };
 
@@ -383,6 +252,111 @@ var ThreeJS = function(aP5, aDiv) {
 
 
   //Private Methods
+
+  function setupShaders() {
+    mShaderMaterialFakeTexture = new THREE.ShaderMaterial({
+
+      uniforms: {
+        uTextureMap: {
+          type: "t",
+          value: null
+        },
+        uBBox: {
+          type: "v3v",
+          value: null
+        },
+      },
+      attributes: {},
+      side: THREE.DoubleSide,
+      vertexColors: THREE.VertexColors,
+      vertexShader: document.getElementById('vertexShaderFakeTexture').textContent,
+      fragmentShader: document.getElementById('fragmentShaderFakeTexture').textContent
+    });
+
+    mShaderMaterialTexture = new THREE.ShaderMaterial({
+
+      uniforms: {
+        uTextureMap: {
+          type: "t",
+          value: null
+        },
+      },
+      attributes: {},
+      side: THREE.DoubleSide,
+      vertexColors: THREE.VertexColors,
+      vertexShader: document.getElementById('vertexShaderTexture').textContent,
+      fragmentShader: document.getElementById('fragmentShaderTexture').textContent
+    });
+
+    mShaderMaterialTextureDistort = new THREE.ShaderMaterial({
+
+      uniforms: {
+        uTextureMap: {
+          type: "t",
+          value: null
+        },
+      },
+      attributes: {},
+      side: THREE.DoubleSide,
+      vertexColors: THREE.VertexColors,
+      vertexShader: document.getElementById('vertexShaderTextureDistort').textContent,
+      fragmentShader: document.getElementById('fragmentShaderTextureDistort').textContent
+    });
+
+    mShaderMaterialFakeTextureDistort = new THREE.ShaderMaterial({
+
+      uniforms: {
+        uTextureMap: {
+          type: "t",
+          value: null
+        },
+        uBBox: {
+          type: "v3v",
+          value: null
+        },
+      },
+      attributes: {},
+      side: THREE.DoubleSide,
+      vertexColors: THREE.VertexColors,
+      vertexShader: document.getElementById('vertexShaderFakeTextureDistort').textContent,
+      fragmentShader: document.getElementById('fragmentShaderFakeTextureDistort').textContent
+    });
+
+    mShaderMaterialFakeTextureDistortHeight = new THREE.ShaderMaterial({
+
+      uniforms: {
+        uTextureMap: {
+          type: "t",
+          value: null
+        },
+        uBBox: {
+          type: "v3v",
+          value: null
+        },
+      },
+      attributes: {},
+      side: THREE.DoubleSide,
+      vertexColors: THREE.VertexColors,
+      vertexShader: document.getElementById('vertexShaderFakeTextureDistortHeight').textContent,
+      fragmentShader: document.getElementById('fragmentShaderFakeTextureDistortHeight').textContent
+    });
+
+    mShaderMaterialTextureDistortHeight = new THREE.ShaderMaterial({
+
+      uniforms: {
+        uTextureMap: {
+          type: "t",
+          value: null
+        },
+      },
+      attributes: {},
+      side: THREE.DoubleSide,
+      vertexColors: THREE.VertexColors,
+      vertexShader: document.getElementById('vertexShaderTextureDistortHeight').textContent,
+      fragmentShader: document.getElementById('fragmentShaderTextureDistortHeight').textContent
+    });
+  }
+
   function buildAxes(length) {
     var axes = new THREE.Object3D();
 
