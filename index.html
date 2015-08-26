@@ -4,22 +4,9 @@
 <head>
   <title>PhoneCase</title>
 
-  <script src="libraries/p5.js" type="text/javascript"></script>
-  <script src="libraries/p5.dom.js" type="text/javascript"></script>
-  <script src="libraries/three.js" type="text/javascript"></script>
-  <script src="libraries/three/renderers/CanvasRenderer.js" type="text/javascript"></script>
-  <script src="libraries/three/Detector.js" type="text/javascript"></script>
-  <script src="libraries/three/postprocessing/EffectComposer.js"></script>
-  <script src="libraries/three/postprocessing/RenderPass.js"></script>
-  <script src="libraries/three/postprocessing/ShaderPass.js"></script>
-  <script src="libraries/three/postprocessing/MaskPass.js"></script>
-  <script src="libraries/three/shaders/CopyShader.js"></script>
-  <script src="data/convergence.js" type="text/javascript"></script>
-  <script src="data/cut_slider.js" type="text/javascript"></script>
-
   <script type="x-shader/x-vertex" id="vertexShaderFakeTexture">
     float brightness(vec3 aColor) {
-      return 0.2126 * aColor.r + 0.7152 * aColor.g + aColor.b;
+      return 0.2126 * aColor.r + 0.7152 * aColor.g + 0.0722 * aColor.b;
     }
 
     bool isInsideBox(vec3 aPoint, vec3 aBBoxMin, vec3 aBBoxMax) {
@@ -61,7 +48,7 @@
 
   <script type="x-shader/x-fragment" id="fragmentShaderFakeTexture">
     float brightness(vec3 aColor) {
-      return 0.2126 * aColor.r + 0.7152 * aColor.g + aColor.b;
+      return 0.2126 * aColor.r + 0.7152 * aColor.g + 0.0722 * aColor.b;
     }
 
     uniform sampler2D uTextureMap;
@@ -81,7 +68,7 @@
   </script>
   <script type="x-shader/x-vertex" id="vertexShaderTexture">
     float brightness(vec3 aColor) {
-      return 0.2126 * aColor.r + 0.7152 * aColor.g + aColor.b;
+      return 0.2126 * aColor.r + 0.7152 * aColor.g + 0.0722 * aColor.b;
     }
 
     bool isInsideBox(vec3 aPoint, vec3 aBBoxMin, vec3 aBBoxMax) {
@@ -110,7 +97,7 @@
 
   <script type="x-shader/x-fragment" id="fragmentShaderTexture">
     float brightness(vec3 aColor) {
-      return 0.2126 * aColor.r + 0.7152 * aColor.g + aColor.b;
+      return 0.2126 * aColor.r + 0.7152 * aColor.g + 0.0722 * aColor.b;
     }
 
     uniform sampler2D uTextureMap;
@@ -126,7 +113,7 @@
 
   <script type="x-shader/x-vertex" id="vertexShaderTextureDistort">
     float brightness(vec3 aColor) {
-      return 0.2126 * aColor.r + 0.7152 * aColor.g + aColor.b;
+      return 0.2126 * aColor.r + 0.7152 * aColor.g + 0.0722 * aColor.b;
     }
 
     bool isInsideBox(vec3 aPoint, vec3 aBBoxMin, vec3 aBBoxMax) {
@@ -160,7 +147,7 @@
 
   <script type="x-shader/x-fragment" id="fragmentShaderTextureDistort">
     float brightness(vec3 aColor) {
-      return 0.2126 * aColor.r + 0.7152 * aColor.g + aColor.b;
+      return 0.2126 * aColor.r + 0.7152 * aColor.g + 0.0722 * aColor.b;
     }
 
     uniform sampler2D uTextureMap;
@@ -179,7 +166,7 @@
   </script>
   <script type="x-shader/x-vertex" id="vertexShaderFakeTextureDistort">
     float brightness(vec3 aColor) {
-      return 0.2126 * aColor.r + 0.7152 * aColor.g + aColor.b;
+      return 0.2126 * aColor.r + 0.7152 * aColor.g + 0.0722 * aColor.b;
     }
 
     bool isInsideBox(vec3 aPoint, vec3 aBBoxMin, vec3 aBBoxMax) {
@@ -221,7 +208,7 @@
 
   <script type="x-shader/x-fragment" id="fragmentShaderFakeTextureDistort">
     float brightness(vec3 aColor) {
-      return 0.2126 * aColor.r + 0.7152 * aColor.g + aColor.b;
+      return 0.2126 * aColor.r + 0.7152 * aColor.g + 0.0722 * aColor.b;
     }
 
     uniform sampler2D uTextureMap;
@@ -240,7 +227,7 @@
   </script>
   <script type="x-shader/x-vertex" id="vertexShaderFakeTextureDistortHeight">
     float brightness(vec3 aColor) {
-      return 0.2126 * aColor.r + 0.7152 * aColor.g + aColor.b;
+      return 0.2126 * aColor.r + 0.7152 * aColor.g + 0.0722 * aColor.b;
     }
 
     bool isInsideBox(vec3 aPoint, vec3 aBBoxMin, vec3 aBBoxMax) {
@@ -284,7 +271,7 @@
 
   <script type="x-shader/x-fragment" id="fragmentShaderFakeTextureDistortHeight">
     float brightness(vec3 aColor) {
-      return 0.2126 * aColor.r + 0.7152 * aColor.g + aColor.b;
+      return 0.2126 * aColor.r + 0.7152 * aColor.g + 0.0722 * aColor.b;
     }
 
     uniform sampler2D uTextureMap;
@@ -303,7 +290,7 @@
   </script>
   <script type="x-shader/x-vertex" id="vertexShaderTextureDistortHeight">
     float brightness(vec3 aColor) {
-      return 0.2126 * aColor.r + 0.7152 * aColor.g + aColor.b;
+      return 0.2126 * aColor.r + 0.7152 * aColor.g + 0.0722 * aColor.b;
     }
 
     bool isInsideBox(vec3 aPoint, vec3 aBBoxMin, vec3 aBBoxMax) {
@@ -331,7 +318,7 @@
       if (brightness(pixelCol.rgb) < .2) {
         vShouldDiscard = 1.0;
       } else {
-        newPosition.z += 5.0 * brightness(pixelCol.rgb);
+        newPosition.z -= 5.0 * brightness(pixelCol.rgb);
       }
       vColor = vec3(1.0, 0.0, 0.0);
       gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
@@ -341,7 +328,7 @@
 
   <script type="x-shader/x-fragment" id="fragmentShaderTextureDistortHeight">
     float brightness(vec3 aColor) {
-      return 0.2126 * aColor.r + 0.7152 * aColor.g + aColor.b;
+      return 0.2126 * aColor.r + 0.7152 * aColor.g + 0.0722 * aColor.b;
     }
 
     uniform sampler2D uTextureMap;
@@ -358,6 +345,62 @@
 
     }
   </script>
+  <script type="x-shader/x-vertex" id="vertexShaderDistortHeight">
+    float brightness(vec3 aColor) {
+      return 0.2126 * aColor.r + 0.7152 * aColor.g + 0.0722 * aColor.b;
+    }
+
+    bool isInsideBox(vec3 aPoint, vec3 aBBoxMin, vec3 aBBoxMax) {
+      if (aPoint.x < aBBoxMax.x && aPoint.x > aBBoxMin.x && aPoint.y < aBBoxMax.y && aPoint.y > aBBoxMin.y && aPoint.z < aBBoxMax.z && aPoint.z > aBBoxMin.z) {
+        return true;
+      } else {
+        false;
+      }
+    }
+    
+     //Texture
+    uniform sampler2D uTextureMap;
+    varying float vShouldDiscard;
+    varying vec2 vUv;
+    varying vec3 vColor;
+    void main() {
+      vShouldDiscard = 0.0;
+      vUv = uv;
+      //condition to check if we need to process the vertex or not
+      vec4 pixelCol = texture2D(uTextureMap, vUv);
+      vec3 newPosition = position;
+      float pixelBrightness = brightness(pixelCol.rgb);
+      if (pixelBrightness==0.0) {
+        vShouldDiscard = 1.0;
+      } else if (pixelBrightness<1.0){
+        newPosition.z += 5.0 * pixelBrightness;
+      }
+      vColor = color;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(newPosition, 1.0);
+
+    }
+  </script>
+
+  <script type="x-shader/x-fragment" id="fragmentShaderDistortHeight">
+    float brightness(vec3 aColor) {
+      return 0.2126 * aColor.r + 0.7152 * aColor.g + 0.0722 * aColor.b;
+    }
+
+    uniform sampler2D uTextureMap;
+    varying float vShouldDiscard;
+    varying vec2 vUv;
+    varying vec3 vColor;
+    void main() {
+      if (vShouldDiscard == 1.0) discard;
+      vec4 pixelCol = texture2D(uTextureMap, vUv);
+      gl_FragColor = vec4(vColor * pixelCol.rgb, 1.0);
+    }
+  </script>
+  <script src="libraries/p5.js" type="text/javascript"></script>
+  <script src="libraries/p5.dom.js" type="text/javascript"></script>
+  <script src="libraries/three.js" type="text/javascript"></script>
+  <script src="libraries/three/renderers/CanvasRenderer.js" type="text/javascript"></script>
+  <script src="libraries/three/Detector.js" type="text/javascript"></script>
   <script src="libraries/ThreeCSG/ThreeCSG.js"></script>
   <script src="libraries/FileSaver/FileSaver.min.js"></script>
   <script src="libraries/three/loaders/STLLoader.js"></script>
