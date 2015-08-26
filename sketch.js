@@ -13,7 +13,7 @@ function setup() {
   mThreeJS = new ThreeJS(this, mDiv);
   mThreeJS.setupRenderer(width, height);
   mThreeJS.setupScene();
-  mThreeJS.loadSTLFile('data/iphone6HiRez.stl');
+  //mThreeJS.loadSTLFile('data/iphone6HiRez.stl');
   //mThreeJS.loadJSONFile('data/iphone6.json');
   
   

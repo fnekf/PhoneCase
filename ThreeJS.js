@@ -45,6 +45,7 @@ var ThreeJS = function(aP5, aDiv) {
 
     mMesh = new THREE.Mesh(new THREE.TorusGeometry(10, 3, 16, 100), mShaderMaterialFakeTexture);
     mMesh.geometry.computeBoundingBox();
+    mMesh.position.z = -20;
     mMesh.castShadow = true;
     mMesh.receiveShadow = true;
     mMesh.name = "MainMesh";
@@ -58,8 +59,14 @@ var ThreeJS = function(aP5, aDiv) {
 
     var geometry = new THREE.PlaneBufferGeometry(5, 20, 600, 1200);
     geometry.computeBoundingBox();
-    var plane = new THREE.Mesh(geometry, mShaderMaterialTextureDistortHeight);
+    var plane = new THREE.Mesh(geometry, mShaderMaterialDistortHeight);
     plane.position.z = 0;
+    plane.scale.x = 20;
+    plane.scale.y = 10;
+    plane.recieveShadow = true;
+    mScene.add(plane);
+    plane = new THREE.Mesh(geometry, mShaderMaterialTexture);
+    plane.position.z = -10;
     plane.scale.x = 20;
     plane.scale.y = 10;
     plane.recieveShadow = true;
@@ -81,12 +88,13 @@ var ThreeJS = function(aP5, aDiv) {
     mTextureMapDynamic.magFilter = THREE.LinearFilter;
     mTextureMapDynamic.needsUpdate = true;
     //console.log(mTextureMapDynamic.image.width);
-    mShaderMaterialTexture.uniforms["uTextureMap"].value = mTextureMapDynamic;
+    mShaderMaterialTexture.uniforms["uTextureMap"].value = mTextureMapStatic;
     mShaderMaterialTextureDistort.uniforms["uTextureMap"].value = mTextureMapDynamic;
     mShaderMaterialFakeTexture.uniforms["uTextureMap"].value = mTextureMapStatic;
     mShaderMaterialFakeTextureDistort.uniforms["uTextureMap"].value = mTextureMapDynamic;
     mShaderMaterialFakeTextureDistortHeight.uniforms["uTextureMap"].value = mTextureMapDynamic;
     mShaderMaterialTextureDistortHeight.uniforms["uTextureMap"].value = mTextureMapDynamic;
+    mShaderMaterialDistortHeight.uniforms["uTextureMap"].value = mTextureMapDynamic;
     var boundingBox = mMesh.geometry.boundingBox.clone();
     mShaderMaterialFakeTexture.uniforms["uBBox"].value = [new THREE.Vector3(boundingBox.min.x, boundingBox.min.y, boundingBox.max.z - 1), boundingBox.max];
     mShaderMaterialFakeTextureDistort.uniforms["uBBox"].value = [new THREE.Vector3(boundingBox.min.x, boundingBox.min.y, boundingBox.min.z), boundingBox.max];
@@ -354,6 +362,21 @@ var ThreeJS = function(aP5, aDiv) {
       vertexColors: THREE.VertexColors,
       vertexShader: document.getElementById('vertexShaderTextureDistortHeight').textContent,
       fragmentShader: document.getElementById('fragmentShaderTextureDistortHeight').textContent
+    });
+    
+    mShaderMaterialDistortHeight = new THREE.ShaderMaterial({
+
+      uniforms: {
+        uTextureMap: {
+          type: "t",
+          value: null
+        },
+      },
+      attributes: {},
+      side: THREE.DoubleSide,
+      vertexColors: THREE.VertexColors,
+      vertexShader: document.getElementById('vertexShaderDistortHeight').textContent,
+      fragmentShader: document.getElementById('fragmentShaderDistortHeight').textContent
     });
   }
 
